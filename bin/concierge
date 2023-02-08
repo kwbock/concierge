@@ -12,7 +12,9 @@ class Parser
       opts.separator ''
       opts.separator 'Options:'
       
-      opts.on '-d', '--datastore', 'Connect to a datastore'
+      opts.on '-d', '--datastore=DATASTORE', 'Connect to a datastore' do |d|
+        options[:datastore] = d
+      end
 
       opts.separator ''
       opts.separator 'Help options:'
@@ -26,6 +28,11 @@ class Parser
   end
 end
 
+Parser.parse %w[--help] if ARGV.empty?
+
+args = ARGV
+command = args.shift
+
 begin
   options = Parser.parse ARGV
 rescue Exception => e
@@ -33,4 +40,9 @@ rescue Exception => e
   exit 1
 end
 
-Parser.parse %w[--help] if ARGV.empty?
+
+
+case command
+when "datastore"
+  exec("docker exec -it #{options[:datastore]} /usr/local/bin/psql -U postgres -w")
+end
