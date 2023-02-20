@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13.5-alpine
+    container_name: 'postgres13'
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
